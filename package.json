@@ -1,0 +1,36 @@
+{
+  "name": "azure-b2c-custom-policy-designer",
+  "version": "0.1.0",
+  "private": true,
+  "author": "Willian Antunes <willian.lima.antunes@gmail.com>",
+  "bugs": {
+    "url": "https://github.com/willianantunes/azure-b2c-custom-policy-designer/issues"
+  },
+  "homepage": "https://github.com/willianantunes/azure-b2c-custom-policy-designer#readme",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/willianantunes/azure-b2c-custom-policy-designer.git"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "dependencies": {
+    "@mui/material": "^5.0.4",
+    "next": "11.1.2",
+    "react": "17.0.2",
+    "react-dom": "17.0.2"
+  },
+  "devDependencies": {
+    "eslint": "8.0.1",
+    "eslint-config-next": "11.1.2",
+    "eslint-config-prettier": "^8.3.0",
+    "prettier": "2.4.1"
+  }
+}
