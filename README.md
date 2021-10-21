@@ -9,3 +9,8 @@ More to come soon.
 ## Links
 
 - [Next.js with MUI](https://github.com/mui-org/material-ui/tree/master/examples/nextjs)
+
+## Issues
+
+- https://github.com/mui-org/material-ui/issues/27087
+- https://github.com/mui-org/material-ui/issues/27846
