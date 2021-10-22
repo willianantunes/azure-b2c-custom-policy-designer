@@ -1,6 +1,7 @@
-const withTM = require("next-transpile-modules")(["@mui/material", "@mui/system"])
+const modules = ["@mui/material", "@mui/system"]
+const withTransportModules = require("next-transpile-modules")(modules)
 
-module.exports = withTM({
+module.exports = withTransportModules({
   reactStrictMode: true,
   webpack: config => {
     config.resolve.alias = {

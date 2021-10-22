@@ -6,8 +6,7 @@ import { StyledEngineProvider, ThemeProvider as MuiThemeProvider } from "@mui/ma
 import CssBaseline from "@mui/material/CssBaseline"
 import theme from "../styles/theme"
 
-export default function MyApp(props) {
-  const { Component, pageProps } = props
+export function TopLayout({ children }) {
   return (
     <>
       <Head>
@@ -19,11 +18,21 @@ export default function MyApp(props) {
         <MuiThemeProvider theme={theme}>
           <StyledComponentsThemeProvider theme={theme}>
             <CssBaseline />
-            <Component {...pageProps} />
+            {children}
           </StyledComponentsThemeProvider>
         </MuiThemeProvider>
       </StyledEngineProvider>
     </>
+  )
+}
+
+export default function MyApp(props) {
+  const { Component, pageProps } = props
+
+  return (
+    <TopLayout>
+      <Component {...pageProps} />
+    </TopLayout>
   )
 }
 
