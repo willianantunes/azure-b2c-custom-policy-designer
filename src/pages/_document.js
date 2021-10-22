@@ -1,7 +1,7 @@
 import React from "react"
 import Document, { Html, Head, Main, NextScript } from "next/document"
 import { ServerStyleSheet } from "styled-components"
-import theme from "../src/styles/theme"
+import theme from "../styles/theme"
 
 export default class MyDocument extends Document {
   render() {
@@ -23,14 +23,15 @@ export default class MyDocument extends Document {
 MyDocument.getInitialProps = async ctx => {
   const sheet = new ServerStyleSheet()
   const originalRenderPage = ctx.renderPage
+  const customRenderPage = () =>
+    originalRenderPage({
+      enhanceApp: App => props => sheet.collectStyles(<App {...props} />),
+    })
 
   try {
-    ctx.renderPage = () =>
-      originalRenderPage({
-        enhanceApp: App => props => sheet.collectStyles(<App {...props} />),
-      })
-
+    ctx.renderPage = customRenderPage
     const initialProps = await Document.getInitialProps(ctx)
+
     return {
       ...initialProps,
       styles: (
