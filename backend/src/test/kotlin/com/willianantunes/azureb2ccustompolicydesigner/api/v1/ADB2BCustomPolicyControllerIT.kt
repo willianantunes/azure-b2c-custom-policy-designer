@@ -35,4 +35,22 @@ class ADB2BCustomPolicyControllerIT @Autowired constructor(val restTemplate: Tes
         val bodyAsJson = JSONObject(responseEntity.body)
         assertThat(bodyAsJson["message"]).isEqualTo("You should have posted a XML file")
     }
+
+    @Test
+    fun `Should return 400 given uploaded file is not a valid XML file`() {
+        // Arrange
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.MULTIPART_FORM_DATA
+        headers.accept = listOf(MediaType.APPLICATION_JSON)
+        val whereTheFileIsFromSystemResource = retrieveFilePathFromTestResources("invalid.xml")
+        val multipart = LinkedMultiValueMap<String, FileSystemResource>()
+        multipart.add("file", whereTheFileIsFromSystemResource)
+        // Act
+        val responseEntity = restTemplate.postForEntity(REQUEST_PATH_AD_B2C_CUSTOM_POLICY, HttpEntity(multipart, headers), String::class.java)
+        // Assert
+        assertThat(responseEntity.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
+        assertThat(responseEntity.headers.contentType.toString()).isEqualTo(MediaType.APPLICATION_JSON_VALUE)
+        val bodyAsJson = JSONObject(responseEntity.body)
+        assertThat(bodyAsJson["message"]).isEqualTo("Your XML file is invalid")
+    }
 }

@@ -1,5 +1,6 @@
 package com.willianantunes.azureb2ccustompolicydesigner.api.v1
 
+import com.willianantunes.azureb2ccustompolicydesigner.support.validXMLFile
 import mu.KotlinLogging
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.PostMapping
@@ -21,6 +22,10 @@ class ADB2BCustomPolicyController {
 
         if (!filename.endsWith(".xml")) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "You should have posted a XML file")
+        }
+
+        if (!validXMLFile(customPolicyFile.inputStream)) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Your XML file is invalid")
         }
 
         throw ResponseStatusException(HttpStatus.NOT_IMPLEMENTED)
