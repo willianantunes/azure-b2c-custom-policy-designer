@@ -11,7 +11,7 @@ import org.springframework.http.MediaType
 private const val REQUEST_PATH_ACTUATOR = "/actuator/health"
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class AzureB2cCustomPolicyDesignerApplicationTests @Autowired constructor(val restTemplate: TestRestTemplate) {
+class AzureB2cCustomPolicyDesignerApplicationIT @Autowired constructor(val restTemplate: TestRestTemplate) {
     @Test
     fun `Should load Spring Boot context`() = Unit
 

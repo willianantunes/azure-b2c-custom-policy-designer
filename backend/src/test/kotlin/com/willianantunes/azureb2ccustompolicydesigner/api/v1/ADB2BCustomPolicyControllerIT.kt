@@ -53,4 +53,43 @@ class ADB2BCustomPolicyControllerIT @Autowired constructor(val restTemplate: Tes
         val bodyAsJson = JSONObject(responseEntity.body)
         assertThat(bodyAsJson["message"]).isEqualTo("Your XML file is invalid")
     }
+
+    @Test
+    fun `Should 200 informing the provided document is valid`() {
+        // Arrange
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.MULTIPART_FORM_DATA
+        headers.accept = listOf(MediaType.APPLICATION_JSON)
+        val whereTheFileIsFromSystemResource = retrieveFilePathFromTestResources("policies-samples/local-accounts/TrustFrameworkBase.xml")
+        val multipart = LinkedMultiValueMap<String, FileSystemResource>()
+        multipart.add("file", whereTheFileIsFromSystemResource)
+        // Act
+        val responseEntity = restTemplate.postForEntity(REQUEST_PATH_AD_B2C_CUSTOM_POLICY, HttpEntity(multipart, headers), String::class.java)
+        // Assert
+        assertThat(responseEntity.statusCode).isEqualTo(HttpStatus.OK)
+        assertThat(responseEntity.headers.contentType.toString()).isEqualTo(MediaType.APPLICATION_JSON_VALUE)
+        val bodyAsJson = JSONObject(responseEntity.body)
+        assertThat(bodyAsJson["valid"] as Boolean).isTrue
+    }
+
+    @Test
+    fun `Should 200 informing the provided document is not valid`() {
+        // Arrange
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.MULTIPART_FORM_DATA
+        headers.accept = listOf(MediaType.APPLICATION_JSON)
+        val whereTheFileIsFromSystemResource = retrieveFilePathFromTestResources("invalid-TrustFrameworkBase.xml")
+        val multipart = LinkedMultiValueMap<String, FileSystemResource>()
+        multipart.add("file", whereTheFileIsFromSystemResource)
+        // Act
+        val responseEntity = restTemplate.postForEntity(REQUEST_PATH_AD_B2C_CUSTOM_POLICY, HttpEntity(multipart, headers), String::class.java)
+        // Assert
+        assertThat(responseEntity.statusCode).isEqualTo(HttpStatus.OK)
+        assertThat(responseEntity.headers.contentType.toString()).isEqualTo(MediaType.APPLICATION_JSON_VALUE)
+        val bodyAsJson = JSONObject(responseEntity.body)
+        assertThat(bodyAsJson["valid"] as Boolean).isFalse
+        assertThat(bodyAsJson["lineNumber"] as Int).isEqualTo(77)
+        assertThat(bodyAsJson["columnNumber"] as Int).isEqualTo(45)
+        assertThat(bodyAsJson["message"]).isEqualTo("cvc-enumeration-valid: Value 'INVALID' is not facet-valid with respect to enumeration '[boolean, date, dateTime, duration, int, long, string, stringCollection, alternativeSecurityIdCollection, userIdentityCollection, userIdentity, phoneNumber, objectIdentityCollection, objectIdentity]'. It must be a value from the enumeration.")
+    }
 }

@@ -15,3 +15,10 @@ spring:
 server:
   error:
     include-message: always
+
+custom-policy-settings:
+  schema-definition:
+    # https://github.com/Azure-Samples/active-directory-b2c-custom-policy-starterpack/issues/62
+    # https://github.com/Azure-Samples/active-directory-b2c-custom-policy-starterpack/issues/71
+    local: TrustFrameworkPolicy_0.3.0.0.xsd
+    web: https://raw.githubusercontent.com/Azure-Samples/active-directory-b2c-custom-policy-starterpack/master/TrustFrameworkPolicy_0.3.0.0.xsd

@@ -1,6 +1,9 @@
 package com.willianantunes.azureb2ccustompolicydesigner.api.v1
 
+import com.willianantunes.azureb2ccustompolicydesigner.services.CustomPolicySchemaFactory
+import com.willianantunes.azureb2ccustompolicydesigner.support.EvaluationDetails
 import com.willianantunes.azureb2ccustompolicydesigner.support.validXMLFile
+import com.willianantunes.azureb2ccustompolicydesigner.support.validXMLFileFormat
 import mu.KotlinLogging
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.PostMapping
@@ -14,20 +17,24 @@ private val logger = KotlinLogging.logger {}
 
 @RestController
 @RequestMapping("/api/v1/ad-b2c-custom-policies")
-class ADB2BCustomPolicyController {
+class ADB2BCustomPolicyController(private val customPolicySchemaFactory: CustomPolicySchemaFactory) {
     @PostMapping
-    fun evaluatePolicy(@RequestParam("file") customPolicyFile: MultipartFile) {
+    fun evaluatePolicy(@RequestParam("file") customPolicyFile: MultipartFile): EvaluationDetails {
         val filename = customPolicyFile.originalFilename!!
-        logger.info { "Initializing evaluation of $filename" }
+        logger.debug { "Initializing evaluation of $filename" }
 
         if (!filename.endsWith(".xml")) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "You should have posted a XML file")
         }
 
-        if (!validXMLFile(customPolicyFile.inputStream)) {
+        if (!validXMLFileFormat(customPolicyFile.inputStream).valid) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Your XML file is invalid")
         }
 
-        throw ResponseStatusException(HttpStatus.NOT_IMPLEMENTED)
+        val schemaFile = customPolicySchemaFactory.fromLocalFile().third
+        val result = validXMLFile(customPolicyFile.inputStream, schemaFile.inputStream())
+        logger.debug { "Provided document evaluated as $result" }
+
+        return result
     }
 }
